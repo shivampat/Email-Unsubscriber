@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, request, url_for
+from flask import Flask, render_template, session, redirect, request, url_for, jsonify
 import os, pathlib
 
 from google.oauth2.credentials import Credentials
@@ -60,15 +60,15 @@ def getUnsubscribeHeaders(service):
     
     return unsubscribeHeaders
 
-
 @app.route('/')
 def index():
-    if 'credentials' in session:
-        service = getService(session['credentials'])
-        headers = getUnsubscribeHeaders(service)
-        return render_template('main.html', header_dict=headers)
-    else:
-        return "<h1>You are not logged in.</h1>"
+    return render_template('main.html')
+
+@app.route('/get_links')
+def get_links():
+    service = getService(session['credentials'])
+    headers = getUnsubscribeHeaders(service)
+    return jsonify(headers)
 
 @app.route('/login')
 def login():
@@ -115,8 +115,9 @@ def oauth2callback():
     
     return redirect(url_for('index'))
 
-app.run(
-    host='localhost', 
-    debug=True, 
-    ssl_context=('cert.pem', 'key.pem'),
-    )
+if __name__ == '__main__':
+    app.run(
+        host='localhost', 
+        debug=True, 
+        ssl_context=('cert.pem', 'key.pem'),
+        )

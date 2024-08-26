@@ -12,7 +12,8 @@ fetch("https://localhost:5000/get_links")
         link = link.replace("<", "").replace(">", "");
 
         if (link.indexOf("https") != -1)
-        else if (link.indexOf("mailto:"))
+          link = link.replace("<https://", "").replace(">", ""); 
+        else if (link.indexOf("mailto:")) 
           link = link.replace("<mailto:", "").replace(">", "");
 
         p_elm.href = link
@@ -23,3 +24,4 @@ fetch("https://localhost:5000/get_links")
       });
     });
   });
+
